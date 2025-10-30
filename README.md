@@ -1,5 +1,5 @@
 # 요약:
-## macOS에서
+## macOS에서 예시:
 ./docker_compile.sh Swap/swap.asm swap
 ./docker_run.sh swap
 
