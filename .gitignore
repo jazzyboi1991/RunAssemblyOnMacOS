@@ -23,13 +23,12 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Unix executable files (no extension)
-*
-!*/
-!*.*
-!Makefile
-!LICENSE
-!README
+# Unix executable files (no extension) - be more specific
+# Only ignore specific executables in Examples directory
+Examples/**/hello
+Examples/**/arith
+Examples/**/swap
+Examples/**/logical
 
 # Object files
 *.o
