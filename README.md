@@ -1,3 +1,5 @@
+# English description is below!
+
 # 요약:
 ## macOS에서 예시:
 ./docker_compile.sh Swap/swap.asm swap
@@ -143,3 +145,152 @@ docker run --rm -it -v "$(pwd)":/work gcc:latest bash
 ---
 
 **🎉 이제 macOS에서도 AT&T 어셈블리를 자유롭게 사용할 수 있습니다!**
+
+---
+---
+
+# Summary:
+## Example on macOS:
+./docker_compile.sh Swap/swap.asm swap
+./docker_run.sh swap
+
+# AT&T Assembly Compilation Guide (macOS)
+
+## 🎯 Using AT&T Assembly on macOS
+
+macOS uses the LLVM assembler, which does not directly support GNU AT&T assembly syntax.
+However, using **Docker**, you can easily compile and run AT&T assembly on macOS!
+
+---
+
+## 🚀 Quick Start (Recommended Method)
+
+### Step 1: Install Docker
+Download and install [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop)
+
+### Step 2: Compile and Run
+```bash
+# Compile AT&T assembly
+./docker_compile.sh Swap/swap.asm swap
+
+# Run the compiled program
+./docker_run.sh swap
+```
+
+**Done!** That's all. No additional setup required.
+
+---
+
+## 📝 Usage
+
+### Docker-based Compilation (Easiest)
+```bash
+# Basic usage
+./docker_compile.sh <file.asm> [output_filename]
+
+# Example
+./docker_compile.sh Swap/swap.asm my_program
+./docker_run.sh my_program
+```
+
+### Direct Compilation on Linux Environment
+If you're using Linux or WSL2:
+```bash
+./compile.sh Swap/swap.asm swap
+./swap
+```
+
+### Test with C Version
+If you just want to verify the logic:
+```bash
+gcc -m32 Swap/swap.c -o swap
+./swap
+```
+
+---
+
+## 📁 File Description
+
+| File | Description | Environment |
+|------|-------------|-------------|
+| `docker_compile.sh` | Docker-based compilation script | **macOS (Recommended)** |
+| `docker_run.sh` | Run in Docker | macOS |
+| `compile.sh` | Direct compilation script | Linux/WSL2 |
+| `compile_macos.sh` | macOS format conversion attempt (experimental) | macOS |
+| `convert_to_macos.sh` | Manual conversion tool | macOS |
+| `Swap/swap.asm` | Original AT&T assembly | Linux |
+| `Swap/swap.c` | C version (for testing) | All environments |
+
+---
+
+## ❓ FAQ
+
+### Q: What if I don't have Docker?
+**A:** Choose one of the following:
+1. Install Docker (5 minutes, easiest)
+2. Use a Linux virtual machine (VirtualBox, UTM)
+3. Test with C version (`gcc -m32 Swap/swap.c -o swap`)
+
+### Q: Why is direct compilation impossible on macOS?
+**A:** macOS has the following issues:
+- LLVM assembler does not support GNU AT&T syntax
+- 32-bit executable support discontinued (since Catalina)
+- Semicolon (`;`) comments not supported
+- Uses Mach-O format instead of ELF format
+
+### Q: Can I do it on macOS without Docker?
+**A:** Theoretically possible, but very complex:
+- Install GNU binutils via Homebrew
+- Set up cross-compilation environment
+- Cannot run the result (32-bit not supported)
+
+Docker is much simpler!
+
+---
+
+## 🔧 Troubleshooting
+
+### "Docker is not running"
+→ Launch the Docker Desktop application
+
+### "permission denied: ./docker_compile.sh"
+```bash
+chmod +x docker_compile.sh docker_run.sh
+```
+
+### "no matching manifest for linux/arm64/v8"
+For M1/M2 Macs, Docker handles this automatically. It may take a bit longer.
+
+---
+
+## 🎓 Learning Tips
+
+1. **First**: Understand the logic with C version
+2. **Next**: Implement with AT&T assembly
+3. **Finally**: Use `objdump` for debugging
+   ```bash
+   docker run --rm -v "$(pwd)":/work gcc:latest objdump -d swap
+   ```
+
+---
+
+## 💡 Recommended Workflow
+
+```bash
+# 1. Write/modify code
+vim Swap/swap.asm
+
+# 2. Compile
+./docker_compile.sh Swap/swap.asm swap
+
+# 3. Run and test
+./docker_run.sh swap
+
+# 4. Debug if needed
+docker run --rm -it -v "$(pwd)":/work gcc:latest bash
+# Inside container: gdb swap
+```
+
+---
+
+**🎉 Now you can freely use AT&T assembly on macOS!**

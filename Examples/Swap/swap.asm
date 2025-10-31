@@ -2,7 +2,7 @@
 .LC0:
     .string "a: %d, b: %d\n"
 
-    .text
+.text
     .globl swap
     .type swap, @function
 swap:
