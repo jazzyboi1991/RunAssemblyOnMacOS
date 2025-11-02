@@ -68,16 +68,20 @@ REL_DIR=$(basename "$DIRNAME")
 OBJ_FILE="${BASENAME}.o"
 
 echo "입력 파일: $INPUT_FILE"
-echo "출력 파일: $OUTPUT_NAME"
+echo "출력 파일: $(dirname "$INPUT_FILE")/$OUTPUT_NAME"
 echo ""
 
 # Docker 컨테이너에서 컴파일 실행
 echo -e "${YELLOW}[Docker] Linux 환경에서 컴파일 중...${NC}"
 echo ""
 
+# 입력 파일의 절대 경로 구하기
+ABSOLUTE_DIR="$(cd "$(dirname "$INPUT_FILE")" && pwd)"
+ABSOLUTE_INPUT="$ABSOLUTE_DIR/$FILENAME"
+
 docker run --rm \
     --platform linux/amd64 \
-    -v "$(pwd)":/work \
+    -v "$ABSOLUTE_DIR":/work \
     -w /work \
     ubuntu:20.04 \
     bash -c "
@@ -95,7 +99,7 @@ docker run --rm \
         echo ''
 
         cd /work
-        INPUT='$INPUT_FILE'
+        INPUT='$FILENAME'
         BASENAME='$BASENAME'
         OUTPUT='$OUTPUT_NAME'
         OBJ=\"\${BASENAME}.o\"
@@ -135,8 +139,8 @@ if [ $? -eq 0 ]; then
     echo -e "${YELLOW}참고:${NC} 생성된 실행 파일은 Linux용입니다."
     echo "macOS에서 직접 실행할 수 없습니다."
     echo ""
-    echo -e "Docker에서 실행: ${BLUE}docker run --rm -v \"\$(pwd)\":/work -w /work gcc:latest ./$OUTPUT_NAME${NC}"
-    echo -e "또는 간단히: ${BLUE}./docker_run.sh $OUTPUT_NAME${NC}"
+    echo -e "Docker에서 실행: ${BLUE}docker run --rm -v \"$ABSOLUTE_DIR\":/work -w /work gcc:latest ./$OUTPUT_NAME${NC}"
+    echo -e "또는 간단히: ${BLUE}./docker_run.sh \"$ABSOLUTE_DIR/$OUTPUT_NAME\"${NC}"
 else
     echo -e "${RED}컴파일 실패!${NC}"
     exit 1
